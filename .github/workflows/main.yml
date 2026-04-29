@@ -22,11 +22,13 @@ jobs:
         docker build . --file Dockerfile --tag my-image-name:${GITHUB_SHA_SHORT}
         echo "Images list..."
         docker image ls
-
-    - name: Run Orca Container Image Scan
+        docker save --output $HOME/my-image-name.tar my-image-name:${GITHUB_SHA_SHORT}
+        ls -lah $HOME
+        
+    - name: Run Orca Image Scan on Tar Archive
       uses: orcasecurity/shiftleft-container-image-action@v1
       with:
-        api_token: ${{ secrets.ORCA_SECURITY_API_TOKEN }}
-        project_key: ${{ vars.ORCA_SECURITY_PROJECT_KEY }} 
-        image: my-image-name:${{ env.GITHUB_SHA_SHORT }}
-        debug: true
+          api_token: ${{ secrets.ORCA_SECURITY_API_TOKEN }}
+          project_key: ${{ vars.ORCA_SECURITY_PROJECT_KEY }} 
+          tar_archive: $HOME/my-image-name.tar
+          

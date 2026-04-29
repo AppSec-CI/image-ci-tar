@@ -23,7 +23,7 @@ jobs:
         echo "Images list..."
         docker image ls
         docker save --output my-image-name.tar my-image-name:${GITHUB_SHA_SHORT}
-        pwd ; ls -lah $HOME
+        pwd ; ls -lah
         
     - name: Run Orca Image Scan on Tar Archive
       uses: orcasecurity/shiftleft-container-image-action@v1

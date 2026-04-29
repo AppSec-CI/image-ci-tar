@@ -24,11 +24,20 @@ jobs:
         docker image ls
         docker save --output my-image-name.tar my-image-name:${GITHUB_SHA_SHORT}
         pwd ; ls -lah
-        
+
+    - name: Run Orca Image Scan on Tar Archive using orca-cli binary
+      env:
+        ORCA_SECURITY_API_TOKEN: ${{ secrets.ORCA_SECURITY_API_TOKEN }}
+        ORCA_SECURITY_PROJECT_KEY: ${{ vars.ORCA_SECURITY_PROJECT_KEY }} 
+      run: |
+        set +e
+        apt update && apt install -y curl
+        curl -sfL 'https://raw.GitHubusercontent.com/orcasecurity/orca-cli/main/install.sh' | bash
+        orca-cli image scan --tar-archive my-image-name.tar
+          
     - name: Run Orca Image Scan on Tar Archive
       uses: orcasecurity/shiftleft-container-image-action@v1
       with:
           api_token: ${{ secrets.ORCA_SECURITY_API_TOKEN }}
           project_key: ${{ vars.ORCA_SECURITY_PROJECT_KEY }} 
           tar_archive: my-image-name.tar
-          
